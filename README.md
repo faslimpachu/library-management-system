@@ -35,3 +35,45 @@ Features Implemented
 7.	Background Process:
 •	Celery task to send email notifications reminding users of the due date for returning borrowed books.
 
+
+
+
+Instructions to Run the Project
+Clone the Repository:
+
+
+git clone <repository_url>
+cd <repository_directory>
+Create and Activate a Virtual Environment:
+
+
+python -m venv venv
+source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+
+Install Dependencies:
+
+pip install -r requirements.txt
+Setup Django Project:
+Make Migrations:
+
+python manage.py makemigrations
+python manage.py migrate
+Create Superuser
+python manage.py createsuperuser
+
+Collect Static Files:
+python manage.py collectstatic
+
+
+Run the Development Server:
+python manage.py runserver
+
+
+Setup Celery:
+Run Celery Worker:
+
+celery -A library_project worker --loglevel=info
+Access the Application:
+
+Open  browser and go to http://127.0.0.1:8000/ to access the home page.
+Use the Django admin interface at http://127.0.0.1:8000/admin/ to manage  models.
