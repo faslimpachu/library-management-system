@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Add Book{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <h1 class="text-center mt-5">Add Book</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_title">Title</label>
+                    <input type="text" name="title" class="form-control" id="id_title" required>
+                    <div class="invalid-feedback">Please enter a title.</div>
+                </div>
+                <div class="form-group">
+                    <label for="id_summary">Summary</label>
+                    <textarea name="summary" class="form-control" id="id_summary" rows="4" required></textarea>
+                    <div class="invalid-feedback">Please enter a summary.</div>
+                </div> <br>
+                <div class="form-group">
+                    <label for="id_cover_photo">Cover Photo</label>
+                    <input type="file" name="cover_photo" class="form-control-file" id="id_cover_photo" required>
+                    <div class="invalid-feedback">Please upload a cover photo.</div>
+                </div> <br>
+                <div class="form-group">
+                    <label for="id_pdf_file">PDF File</label>
+                    <input type="file" name="pdf_file" class="form-control-file" id="id_pdf_file">
+                </div>
+                <div class="form-group"> <br>
+                    <label for="id_author">Author</label>
+                    <div class="input-group">
+                        <select name="author" class="form-control" id="id_author" required>
+                            {% for author in authors %}
+                            <option value="{{ author.id }}">{{ author.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#addAuthorModal">Add</button>
+                        </div>
+                    </div>
+                    <div class="invalid-feedback">Please select an author.</div>
+                </div> <br>
+                <div class="form-group">
+                    <label for="id_shelf">Category</label>
+                    <div class="input-group">
+                        <select name="shelf" class="form-control" id="id_shelf" required>
+                            {% for shelf in shelves %}
+                            <option value="{{ shelf.id }}">{{ shelf.location }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#addShelfModal">Add</button>
+                        </div>
+                    </div>
+                    <div class="invalid-feedback">Please select a bookshelf.</div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-4">Add Book</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add Author Modal -->
+<div class="modal fade" id="addAuthorModal" tabindex="-1" role="dialog" aria-labelledby="addAuthorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addAuthorModalLabel">Add Author</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="addAuthorForm" method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="author_name">Name</label>
+                        <input type="text" class="form-control" id="author_name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="author_description">Description</label>
+                        <textarea class="form-control" id="author_description" name="description" rows="3" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Author</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add Bookshelf Modal -->
+<div class="modal fade" id="addShelfModal" tabindex="-1" role="dialog" aria-labelledby="addShelfModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addShelfModalLabel">Add Book Shelf</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="addShelfForm" method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="shelf_location">Location</label>
+                        <input type="text" class="form-control" id="shelf_location" name="location" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Bookshelf</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#addAuthorForm').submit(function (event) {
+            event.preventDefault();
+            $.ajax({
+                url: '{% url "add-author" %}',
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function (data) {
+                    if (data.success) {
+                        $('#addAuthorModal').modal('hide');
+                        location.reload();
+                    }
+                }
+            });
+        });
+
+        $('#addShelfForm').submit(function (event) {
+            event.preventDefault();
+            $.ajax({
+                url: '{% url "add-shelf" %}',
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function (data) {
+                    if (data.success) {
+                        $('#addShelfModal').modal('hide');
+                        location.reload();
+                    }
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

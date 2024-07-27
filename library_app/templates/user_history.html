@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}User History{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>My Book Requests</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Book Title</th>
+                <th>Author</th>
+                <th>Status</th>
+                <th>Requested Date</th>
+                <th>Borrowed Date</th>
+                <th>Return Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for history in histories %}
+                <tr>
+                    <td>{{ history.book.title }}</td>
+                    <td>{{ history.book.author.name }}</td>
+                    <td>{{ history.status }}</td>
+                    <td>{{ history.requested_at }}</td>
+                    <td>{{ history.borrowed_at }}</td>
+                    <td>{{ history.return_at }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

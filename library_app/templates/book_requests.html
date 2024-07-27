@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Book Requests{% endblock %}
+
+<style>
+    .request-card {
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+    .request-card button {
+        margin-right: 10px;
+    }
+</style>
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mt-5">Book Requests</h1>
+    
+    {% if requests %}
+    <div class="row">
+        {% for request in requests %}
+        <div class="col-md-12">
+            <div class="request-card">
+                <h5>{{ request.book.title }}</h5>
+                <p><strong>Author:</strong> {{ request.book.author.name }}</p>
+                <p><strong>Bookshelf:</strong> {{ request.book.shelf.location }}</p>
+                <p><strong>Status:</strong> {{ request.get_status_display }}</p>
+                {% if request.status == 'pending' %}
+                <a href="{% url 'approve-request' request.pk %}" class="btn btn-success">Approve</a>
+                <a href="{% url 'reject-request' request.pk %}" class="btn btn-danger">Reject</a>
+                {% elif request.status == 'approved' %}
+                <p><strong>Borrowed Date:</strong> {{ request.borrowed_at }}</p>
+                <p><strong>Return Date:</strong> {{ request.return_at }}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No book requests available.</p>
+    {% endif %}
+</div>
+{% endblock %}

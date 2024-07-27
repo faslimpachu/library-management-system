@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Manage Book Requests{% endblock %}
+
+{% block content %}
+<div class="container">
+    <p class="text-danger">Note:  user requested data will get In this page. superuser can approve or reject the user request . if superuser approved user can download the PDF (need to refresh current page) <br>
+    And super user is approved user can view their History by user history page  <br>
+and in <span class="text-black">localhost/admin</span> will get History that automatically create an entry in the History model whenever  a book is returned or Boughted  </p>
+    <h1 class="text-center mt-5">Manage Book Requests</h1>
+    <div class="table-responsive mt-4">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>User Name</th>
+                    <th>Email ID</th>
+                    <th>Book Title</th>
+                    <th>Author</th>
+                    <th>Requested Date</th>
+                    <th>Approved Date</th>
+                    <th>Return Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in requests %}
+                <tr>
+                    <td>{{ request.user.username }}</td>
+                    <td>{{ request.user.email }}</td>
+                    <td>{{ request.book.title }}</td>
+                    <td>{{ request.book.author.name }}</td>
+                    <td>{{ request.requested_at }}</td>
+                    <td>{{ request.borrowed_at }}</td>
+                    <td>{{ request.return_at }}</td>
+                    <td>
+                        {% if request.status == 'pending' %}
+                        <form method="post" action="{% url 'approve-request' request.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success">Approve</button>
+                        </form>
+                        <form method="post" action="{% url 'reject-request' request.pk %}" class="mt-2">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Reject</button>
+                        </form>
+                        {% elif request.status == 'approved' %}
+                        <span class="badge badge-success text-success">Approved</span>
+                        {% elif request.status == 'rejected' %}
+                        <span class="badge badge-danger text-danger">Rejected</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Auto-refresh every 30 seconds -->
+<script>
+setInterval(function() {
+    location.reload();
+}, 30000); // 30000 milliseconds = 30 seconds
+</script>
+{% endblock %}

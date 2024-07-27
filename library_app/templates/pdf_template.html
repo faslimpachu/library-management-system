@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ book.title }} PDF</title>
+</head>
+<body>
+    <h1>{{ book.title }}</h1>
+    <p><strong>Author:</strong> {{ book.author.name }}</p>
+    <p><strong>Bookshelf:</strong> {{ book.shelf.location }}</p>
+    <p><strong>Summary:</strong> {{ book.summary }}</p>
+    <p><strong>Borrowed Date:</strong> {{ book_request.borrowed_at }}</p>
+    <p><strong>Return Date:</strong> {{ book_request.return_at }}</p>
+</body>
+</html>

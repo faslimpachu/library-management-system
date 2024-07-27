@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} 
+{{ book.title }} 
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <img src="{{ book.cover_photo.url }}" class="img-fluid" width="100%" alt="{{ book.title }}">
+        </div>
+        <div class="col-md-6">
+            <h1>{{ book.title }}</h1>
+            <p style="background-color: black; color:white; width: fit-content; padding: 5px;">Category : {{ book.shelf.location }}</p>
+            <p><strong>Summary:</strong> {{ book.summary }}</p>
+            <br>
+            <h3>About the Author</h3>
+            <hr>
+            {% if messages %}
+        <div class="alert alert-success mt-3">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+            <br>
+            <p><strong>Author:</strong> {{ book.author.name }}</p>
+            <p><strong>Author Description:</strong> {{ book.author.description }}</p>
+            {% if user.is_superuser %}
+                <a href="{% url 'book-edit' book.pk %}" class="btn btn-primary">Edit</a>
+                <a href="{% url 'book-delete' book.pk %}" class="btn btn-danger">Delete</a>
+            {% else %}
+                {% if book_request and book_request.status == 'approved' %}
+                    <a href="{{ book.pdf_file.url }}" class="btn btn-success" download>Download PDF</a>
+                    <p>Please note: return the book before the deadline.</p>
+                {% else %}
+                    <a href="{% url 'book-requests' book.pk %}" class="btn btn-primary">Request for a Book</a>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    
+</div>
+{% endblock %}

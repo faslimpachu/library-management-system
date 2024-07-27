@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Dashboard{% endblock %}
+
+<style>
+.button-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+}
+button {
+    padding: 25px 60px;
+    border-radius: 8px;
+    border: 3px dashed black;
+    background-color: transparent;
+    margin-top: 15px;
+}
+button:hover {
+    background-color: rgb(233, 254, 243);
+}
+</style>
+
+{% block content %}
+
+<div class="container">
+    <h1 class="text-center mt-5">Dashboard</h1>
+    <p><i>note : localhost/admin for  detailed view</i></p>
+
+    <div class="d-flex justify-content-center gap-4 mt-4">
+        <button type="button" class="btn btn-outline-primary py-3 px-4" onclick="window.location.href='{% url 'add-book' %}'">Add Book</button>
+        <button type="button" class="btn btn-outline-primary py-3 px-4" onclick="window.location.href='{% url 'manage-requests' %}'">Manage Requests</button>
+    </div>
+    
+    
+    <hr class="mt-5 mb-5" style="border: 2px dashed black;">
+    <h2 class="mb-5">All Listed Books</h2>
+    
+   
+    
+    <div class="container">
+        <div class="row">
+            {% for book in books %}
+            <div class="col-md-3 text-center">
+                <div class="card mb-3">
+                    <img src="{{ book.cover_photo.url }}" class="card-img-top" height="350px" alt="{{ book.title }}" onclick="window.location.href='{% url 'book-detail' book.id %}'">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ book.title }}</h5>
+                        <p class="card-text">{{ book.author.name }}</p>
+                        <p class="card-text"><i>Category </i>: <b>{{ book.shelf.location }}</b></p>
+                        <button type="button" class="btn btn-primary" onclick="window.location.href='{% url 'book-detail' book.id %}'">Manage Book</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
